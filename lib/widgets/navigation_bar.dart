@@ -27,7 +27,8 @@ class _NavigationBarState extends State<NavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Material(
+      elevation: 2,
       color: kLightGray,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),

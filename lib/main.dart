@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/bloc/todos_bloc.dart';
+import 'package:todo/bloc/todos_event.dart';
+import 'package:todo/container.dart';
 import 'package:todo/main_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  configureService();
+  runApp(
+    BlocProvider(
+      create: (context) {
+        return TodosBloc()..add(TodosLoad());
+      },
+      child: TodosApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class TodosApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
