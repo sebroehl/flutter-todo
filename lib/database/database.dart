@@ -27,4 +27,6 @@ class Database extends _$Database {
 
   @override
   int get schemaVersion => 1;
+
+  Stream<List<Todo>> get allTodos => select(todos).watch();
 }

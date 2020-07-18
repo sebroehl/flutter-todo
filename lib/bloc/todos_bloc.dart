@@ -1,13 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:todo/bloc/todos_event.dart';
 import 'package:todo/bloc/todos_state.dart';
-import 'package:todo/container.dart';
-import 'package:todo/models/todo.dart';
-import 'package:todo/services/todos_repository.dart';
+import 'package:todo/database/database.dart';
 
 class TodosBloc extends Bloc<TodosEvent, TodosState> {
-  final TodosRepository todosRepository = container<TodosRepository>();
-
   TodosBloc() : super(TodosLoadInProgress());
 
   @override
@@ -23,7 +19,8 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
 
   Stream<TodosState> _mapTodosLoadToState() async* {
     try {
-      final todos = this.todosRepository.getTodos();
+      // TODO
+      final todos = <Todo>[];
       yield TodosLoadSuccess(
         todos,
       );
@@ -42,7 +39,7 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
   Stream<TodosState> _mapTodoUpdatedToState(TodoUpdated event) async* {
     if (state is TodosLoadSuccess) {
       final List<Todo> updatedTodos = (state as TodosLoadSuccess).todos.map((todo) {
-        return todo.task == event.todo.task ? event.todo : todo;
+        return todo.title == event.todo.title ? event.todo : todo;
       }).toList();
       yield TodosLoadSuccess(updatedTodos);
     }

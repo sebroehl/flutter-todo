@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:todo/models/todo.dart';
+import 'package:todo/database/database.dart';
 
 abstract class TodosEvent extends Equatable {
   const TodosEvent();

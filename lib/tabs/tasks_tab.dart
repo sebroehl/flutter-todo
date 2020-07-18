@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/bloc/todos_bloc.dart';
-import 'package:todo/bloc/todos_event.dart';
 import 'package:todo/bloc/todos_state.dart';
-import 'package:todo/models/todo.dart';
 
 class TasksTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TodosBloc, TodosState>(
       builder: (context, state) {
-        if (state is TodosLoadInProgress) {
+        if (state is TodosLoadInProgress || state is TodosLoadFailure) {
           return Center(child: CircularProgressIndicator());
         } else {
           final todos = (state as TodosLoadSuccess).todos;
@@ -26,7 +24,7 @@ class TasksTab extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10.0),
-              ...todos.map((t) => TodoWidget(t.task, t.complete))
+              ...todos.map((t) => TodoWidget(t.title, t.completed))
             ],
           );
         }
@@ -36,10 +34,10 @@ class TasksTab extends StatelessWidget {
 }
 
 class TodoWidget extends StatelessWidget {
-  final String text;
+  final String title;
   final bool completed;
 
-  const TodoWidget(this.text, this.completed, {Key key}) : super(key: key);
+  const TodoWidget(this.title, this.completed, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +55,16 @@ class TodoWidget extends StatelessWidget {
                 size: 17.0,
               ),
               onPressed: () {
-                BlocProvider.of<TodosBloc>(context).add(
-                  TodoUpdated(
-                    Todo(text, !completed),
-                  ),
-                );
+                // BlocProvider.of<TodosBloc>(context).add(
+                //   TodoUpdated(
+                //     Todo(title, !completed),
+                //   ),
+                // );
               },
             ),
             SizedBox(width: 5.0),
             Text(
-              text,
+              title,
               style: TextStyle(
                 decoration: completed ? TextDecoration.lineThrough : TextDecoration.none,
                 fontWeight: FontWeight.w300,
