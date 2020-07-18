@@ -46,10 +46,11 @@ class TodoWidget extends StatelessWidget {
     return InkWell(
       onTap: () {},
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 2.0),
+        padding: const EdgeInsets.symmetric(vertical: 0.0),
         child: Row(
           children: [
             IconButton(
+              padding: EdgeInsets.all(0),
               icon: Icon(
                 completed ? Icons.radio_button_checked : Icons.radio_button_unchecked,
                 color: Colors.grey.shade500,
