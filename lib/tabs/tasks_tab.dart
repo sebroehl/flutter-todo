@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/bloc/todos_bloc.dart';
+import 'package:todo/bloc/todos_event.dart';
 import 'package:todo/bloc/todos_state.dart';
+import 'package:todo/database/database.dart';
 
 class TasksTab extends StatelessWidget {
   @override
@@ -24,7 +26,7 @@ class TasksTab extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10.0),
-              ...todos.map((t) => TodoWidget(t.title, t.completed))
+              ...todos.map((t) => TodoWidget(todo: t))
             ],
           );
         }
@@ -34,10 +36,9 @@ class TasksTab extends StatelessWidget {
 }
 
 class TodoWidget extends StatelessWidget {
-  final String title;
-  final bool completed;
+  final Todo todo;
 
-  const TodoWidget(this.title, this.completed, {Key key}) : super(key: key);
+  const TodoWidget({this.todo, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,25 +51,23 @@ class TodoWidget extends StatelessWidget {
             IconButton(
               padding: EdgeInsets.all(0),
               icon: Icon(
-                completed ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                todo.completed ? Icons.radio_button_checked : Icons.radio_button_unchecked,
                 color: Colors.grey.shade500,
                 size: 17.0,
               ),
               onPressed: () {
-                // BlocProvider.of<TodosBloc>(context).add(
-                //   TodoUpdated(
-                //     Todo(title, !completed),
-                //   ),
-                // );
+                BlocProvider.of<TodosBloc>(context).add(
+                  TodoUpdated(todo.copyWith(completed: !todo.completed)),
+                );
               },
             ),
             SizedBox(width: 5.0),
             Text(
-              title,
+              todo.title,
               style: TextStyle(
-                decoration: completed ? TextDecoration.lineThrough : TextDecoration.none,
+                decoration: todo.completed ? TextDecoration.lineThrough : TextDecoration.none,
                 fontWeight: FontWeight.w300,
-                color: completed ? Colors.grey.shade500 : Colors.grey.shade200,
+                color: todo.completed ? Colors.grey.shade500 : Colors.grey.shade200,
               ),
             )
           ],
