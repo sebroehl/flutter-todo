@@ -28,6 +28,7 @@ class Database extends _$Database {
   @override
   int get schemaVersion => 1;
 
+  Stream<List<Todo>> get watchTodos => select(todos).watch();
   Future<List<Todo>> get allTodos => select(todos).get();
   Future<void> addTodo(TodosCompanion todo) => into(todos).insert(todo);
   Future<void> updateTodo(Todo todo) => update(todos).replace(todo);

@@ -7,12 +7,16 @@ import 'package:todo/database/database.dart';
 class TodosBloc extends Bloc<TodosEvent, TodosState> {
   final Database db = container<Database>();
 
-  TodosBloc() : super(TodosLoadInProgress());
+  TodosBloc() : super(TodosLoadInProgress()) {
+    db.watchTodos.listen((data) {
+      add(TodosLoad(data));
+    });
+  }
 
   @override
   Stream<TodosState> mapEventToState(TodosEvent event) async* {
     if (event is TodosLoad) {
-      yield* _mapTodosLoadToState();
+      yield* _mapTodosLoadToState(event);
     } else if (event is TodoAdded) {
       yield* _mapTodoAddedToState(event);
     } else if (event is TodoUpdated) {
@@ -20,9 +24,14 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
     }
   }
 
-  Stream<TodosState> _mapTodosLoadToState() async* {
+  Stream<TodosState> _mapTodosLoadToState(TodosLoad event) async* {
     try {
-      final todos = await db.allTodos;
+      var todos = <Todo>[];
+      if (event.todos == null) {
+        todos = await db.allTodos;
+      } else {
+        todos = event.todos;
+      }
       yield TodosLoadSuccess(
         todos,
       );
@@ -34,17 +43,14 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
   Stream<TodosState> _mapTodoAddedToState(TodoAdded event) async* {
     if (state is TodosLoadSuccess) {
       await db.addTodo(event.todo);
-      final todos = await db.allTodos;
-      // _mapTodosLoadToState();
-      yield TodosLoadSuccess(todos);
+      yield TodosLoadSuccess();
     }
   }
 
   Stream<TodosState> _mapTodoUpdatedToState(TodoUpdated event) async* {
     if (state is TodosLoadSuccess) {
       await db.updateTodo(event.todo);
-      final todos = await db.allTodos;
-      yield TodosLoadSuccess(todos);
+      yield TodosLoadSuccess();
     }
   }
 }

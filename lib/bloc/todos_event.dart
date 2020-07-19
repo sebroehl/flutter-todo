@@ -8,7 +8,11 @@ abstract class TodosEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class TodosLoad extends TodosEvent {}
+class TodosLoad extends TodosEvent {
+  final List<Todo> todos;
+
+  const TodosLoad([this.todos]);
+}
 
 class TodoAdded extends TodosEvent {
   final TodosCompanion todo;
