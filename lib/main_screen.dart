@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/constants.dart';
 import 'package:todo/tabs/tasks_tab.dart';
+import 'package:todo/widgets/custom_app_bar.dart';
 import 'package:todo/widgets/navigation_bar.dart';
 
 class MainScreen extends StatefulWidget {
@@ -48,33 +49,6 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class CustomAppBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      elevation: 2,
-      color: kLightGray,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Todo',
-              style: TextStyle(color: Colors.white, fontSize: 17.0, fontWeight: FontWeight.w600),
-            ),
-            IconButton(
-              onPressed: () {},
-              color: Colors.white,
-              icon: Icon(Icons.add),
-            ),
-          ],
-        ),
       ),
     );
   }

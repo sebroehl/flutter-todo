@@ -11,7 +11,7 @@ abstract class TodosEvent extends Equatable {
 class TodosLoad extends TodosEvent {}
 
 class TodoAdded extends TodosEvent {
-  final Todo todo;
+  final TodosCompanion todo;
 
   const TodoAdded(this.todo);
 
