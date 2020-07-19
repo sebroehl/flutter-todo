@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:todo/constants.dart';
 
@@ -27,68 +29,78 @@ class _NavigationBarState extends State<NavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: 2,
-      color: kLightGray,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
-        child: Column(
-          children: [
-            SizedBox(height: 50.0),
-            NavigationBarItem(
-              index: 0,
-              text: 'Tasks',
-              icon: Icons.radio_button_checked,
-              selected: isSelected(0),
-              setSelected: setSelected,
-            ),
-            NavigationBarItem(
-              index: 1,
-              text: 'Today',
-              icon: Icons.star,
-              selected: isSelected(1),
-              setSelected: setSelected,
-            ),
-            NavigationBarItem(
-                index: 2,
-                text: 'Upcoming',
-                icon: Icons.calendar_today,
-                selected: isSelected(2),
-                setSelected: setSelected),
-            SizedBox(height: 20.0),
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: Container(
-                height: 0.3,
-                color: Colors.grey.shade100,
+    return Container(
+      constraints: BoxConstraints.expand(),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/gradient.jpg'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Material(
+        elevation: 2,
+        // color: kLightGray,
+        color: Colors.black.withOpacity(0.5),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
+          child: Column(
+            children: [
+              SizedBox(height: 50.0),
+              NavigationBarItem(
+                index: 0,
+                text: 'Tasks',
+                icon: Icons.radio_button_checked,
+                selected: isSelected(0),
+                setSelected: setSelected,
               ),
-            ),
-            SizedBox(height: 20.0),
-            NavigationBarItem(
-              index: 3,
-              text: 'Activity',
-              icon: Icons.timeline,
-              selected: isSelected(3),
-              setSelected: setSelected,
-            ),
-            NavigationBarItem(
-              index: 4,
-              text: 'Trash',
-              icon: Icons.delete,
-              selected: isSelected(4),
-              setSelected: setSelected,
-            ),
-            SizedBox(height: 20.0),
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: Container(
-                height: 0.3,
-                color: Colors.grey.shade100,
+              NavigationBarItem(
+                index: 1,
+                text: 'Today',
+                icon: Icons.star,
+                selected: isSelected(1),
+                setSelected: setSelected,
               ),
-            ),
-            SizedBox(height: 20.0),
-            NavigationBarItem(index: 5, text: 'New List', icon: Icons.add, selected: isSelected(5)),
-          ],
+              NavigationBarItem(
+                  index: 2,
+                  text: 'Upcoming',
+                  icon: Icons.calendar_today,
+                  selected: isSelected(2),
+                  setSelected: setSelected),
+              SizedBox(height: 20.0),
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: Container(
+                  height: 0.3,
+                  color: Colors.grey.shade100,
+                ),
+              ),
+              SizedBox(height: 20.0),
+              NavigationBarItem(
+                index: 3,
+                text: 'Activity',
+                icon: Icons.timeline,
+                selected: isSelected(3),
+                setSelected: setSelected,
+              ),
+              NavigationBarItem(
+                index: 4,
+                text: 'Trash',
+                icon: Icons.delete,
+                selected: isSelected(4),
+                setSelected: setSelected,
+              ),
+              SizedBox(height: 20.0),
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: Container(
+                  height: 0.3,
+                  color: Colors.grey.shade100,
+                ),
+              ),
+              SizedBox(height: 20.0),
+              NavigationBarItem(index: 5, text: 'New List', icon: Icons.add, selected: isSelected(5)),
+            ],
+          ),
         ),
       ),
     );
