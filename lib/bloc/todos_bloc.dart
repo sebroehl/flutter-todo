@@ -32,7 +32,7 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
       } else {
         todos = event.todos;
       }
-      yield TodosLoadSuccess(
+      yield TodosLoaded(
         todos,
       );
     } catch (_) {
@@ -41,16 +41,16 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
   }
 
   Stream<TodosState> _mapTodoAddedToState(TodoAdded event) async* {
-    if (state is TodosLoadSuccess) {
+    if (state is TodosLoaded) {
       await db.addTodo(event.todo);
-      yield TodosLoadSuccess();
+      yield TodosLoaded();
     }
   }
 
   Stream<TodosState> _mapTodoUpdatedToState(TodoUpdated event) async* {
-    if (state is TodosLoadSuccess) {
+    if (state is TodosLoaded) {
       await db.updateTodo(event.todo);
-      yield TodosLoadSuccess();
+      yield TodosLoaded();
     }
   }
 }

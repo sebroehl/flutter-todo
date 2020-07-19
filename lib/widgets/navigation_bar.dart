@@ -45,7 +45,7 @@ class _NavigationBarState extends State<NavigationBar> {
           padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
           child: Column(
             children: [
-              SizedBox(height: 50.0),
+              SizedBox(height: 70.0),
               NavigationBarItem(
                 index: 0,
                 text: 'Tasks',

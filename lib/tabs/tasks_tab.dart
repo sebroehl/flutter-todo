@@ -13,7 +13,7 @@ class TasksTab extends StatelessWidget {
         if (state is TodosLoadInProgress || state is TodosLoadFailure) {
           return Center(child: CircularProgressIndicator());
         } else {
-          final todos = (state as TodosLoadSuccess).todos;
+          final todos = (state as TodosLoaded).todos;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -10,10 +10,10 @@ abstract class TodosState extends Equatable {
 
 class TodosLoadInProgress extends TodosState {}
 
-class TodosLoadSuccess extends TodosState {
+class TodosLoaded extends TodosState {
   final List<Todo> todos;
 
-  const TodosLoadSuccess([this.todos = const []]);
+  const TodosLoaded([this.todos = const []]);
 
   @override
   List<Object> get props => [todos];
