@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:todo/bloc/todos_event.dart';
-import 'package:todo/bloc/todos_state.dart';
+import 'package:todo/bloc/todos/todos_event.dart';
+import 'package:todo/bloc/todos/todos_state.dart';
 import 'package:todo/container.dart';
 import 'package:todo/database/database.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo/bloc/todos_bloc.dart';
-import 'package:todo/bloc/todos_event.dart';
-import 'package:todo/bloc/todos_state.dart';
+import 'package:todo/bloc/todos/todos_bloc.dart';
+import 'package:todo/bloc/todos/todos_event.dart';
+import 'package:todo/bloc/todos/todos_state.dart';
 import 'package:todo/database/database.dart';
 
 class TasksTab extends StatelessWidget {

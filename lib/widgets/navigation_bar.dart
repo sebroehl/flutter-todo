@@ -1,32 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/bloc/tabs/tabs_bloc.dart';
+import 'package:todo/bloc/tabs/tabs_event.dart';
 import 'package:todo/constants.dart';
+import 'package:todo/models/app_tab.dart';
 
-class NavigationBar extends StatefulWidget {
-  final Function setSelectedOfParent;
-
-  const NavigationBar({Key key, this.setSelectedOfParent}) : super(key: key);
-
-  @override
-  _NavigationBarState createState() => _NavigationBarState(
-        setSelectedOfParent: setSelectedOfParent,
-      );
-}
-
-class _NavigationBarState extends State<NavigationBar> {
-  final Function setSelectedOfParent;
-  int _selectedIndex = 0;
-
-  _NavigationBarState({@required this.setSelectedOfParent});
-
-  isSelected(int index) => index == _selectedIndex;
-
-  setSelected(int index) {
-    setState(() => _selectedIndex = index);
-    setSelectedOfParent(index);
-  }
-
+class NavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,22 +31,20 @@ class _NavigationBarState extends State<NavigationBar> {
                 index: 0,
                 text: 'Tasks',
                 icon: Icons.radio_button_checked,
-                selected: isSelected(0),
-                setSelected: setSelected,
+                appTab: AppTab.tasks,
               ),
               NavigationBarItem(
                 index: 1,
                 text: 'Today',
                 icon: Icons.star,
-                selected: isSelected(1),
-                setSelected: setSelected,
+                appTab: AppTab.today,
               ),
               NavigationBarItem(
-                  index: 2,
-                  text: 'Upcoming',
-                  icon: Icons.calendar_today,
-                  selected: isSelected(2),
-                  setSelected: setSelected),
+                index: 2,
+                text: 'Upcoming',
+                icon: Icons.calendar_today,
+                appTab: AppTab.upcoming,
+              ),
               SizedBox(height: 20.0),
               Padding(
                 padding: const EdgeInsets.only(right: 20.0),
@@ -79,15 +58,13 @@ class _NavigationBarState extends State<NavigationBar> {
                 index: 3,
                 text: 'Activity',
                 icon: Icons.timeline,
-                selected: isSelected(3),
-                setSelected: setSelected,
+                appTab: AppTab.activity,
               ),
               NavigationBarItem(
                 index: 4,
                 text: 'Trash',
                 icon: Icons.delete,
-                selected: isSelected(4),
-                setSelected: setSelected,
+                appTab: AppTab.trash,
               ),
               SizedBox(height: 20.0),
               Padding(
@@ -98,7 +75,11 @@ class _NavigationBarState extends State<NavigationBar> {
                 ),
               ),
               SizedBox(height: 20.0),
-              NavigationBarItem(index: 5, text: 'New List', icon: Icons.add, selected: isSelected(5)),
+              NavigationBarItem(
+                index: 5,
+                text: 'New List',
+                icon: Icons.add,
+              ),
             ],
           ),
         ),
@@ -111,24 +92,25 @@ class NavigationBarItem extends StatelessWidget {
   final int index;
   final String text;
   final IconData icon;
-  final bool selected;
-  final Function setSelected;
+  final AppTab appTab;
 
   NavigationBarItem({
     @required this.index,
     @required this.text,
     @required this.icon,
-    @required this.selected,
-    this.setSelected,
+    this.appTab,
   });
 
   @override
   Widget build(BuildContext context) {
+    final _state = BlocProvider.of<TabsBloc>(context).state;
     return InkWell(
-      onTap: () => setSelected(index),
+      onTap: () {
+        BlocProvider.of<TabsBloc>(context).add(TabsUpdated(appTab));
+      },
       child: Container(
         decoration: BoxDecoration(
-          color: selected ? kSelectedGray : Colors.transparent,
+          color: _state == appTab ? kSelectedGray : Colors.transparent,
           borderRadius: BorderRadius.circular(8.0),
         ),
         padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
