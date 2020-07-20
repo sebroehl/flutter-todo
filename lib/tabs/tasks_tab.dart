@@ -26,7 +26,14 @@ class TasksTab extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10.0),
-              ...todos.map((t) => TodoWidget(todo: t))
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    ...todos.map((t) => TodoWidget(todo: t)),
+                  ],
+                ),
+              ),
             ],
           );
         }

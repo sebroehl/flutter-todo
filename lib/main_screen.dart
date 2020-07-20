@@ -14,8 +14,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
-
   Map<AppTab, Widget> contentItems = {
     AppTab.tasks: TasksTab(),
     AppTab.today: Text('Today'),
@@ -44,9 +42,11 @@ class _MainScreenState extends State<MainScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomAppBar(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                        child: contentItems[tab],
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                          child: contentItems[tab],
+                        ),
                       ),
                     ],
                   ),
