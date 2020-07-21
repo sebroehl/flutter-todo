@@ -11,7 +11,12 @@ class Todo extends DataClass implements Insertable<Todo> {
   final int id;
   final String title;
   final bool completed;
-  Todo({@required this.id, @required this.title, @required this.completed});
+  final bool isDeleted;
+  Todo(
+      {@required this.id,
+      @required this.title,
+      @required this.completed,
+      @required this.isDeleted});
   factory Todo.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -24,6 +29,8 @@ class Todo extends DataClass implements Insertable<Todo> {
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
       completed:
           boolType.mapFromDatabaseResponse(data['${effectivePrefix}completed']),
+      isDeleted: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted']),
     );
   }
   @override
@@ -38,6 +45,9 @@ class Todo extends DataClass implements Insertable<Todo> {
     if (!nullToAbsent || completed != null) {
       map['completed'] = Variable<bool>(completed);
     }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
     return map;
   }
 
@@ -49,6 +59,9 @@ class Todo extends DataClass implements Insertable<Todo> {
       completed: completed == null && nullToAbsent
           ? const Value.absent()
           : Value(completed),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
     );
   }
 
@@ -59,6 +72,7 @@ class Todo extends DataClass implements Insertable<Todo> {
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       completed: serializer.fromJson<bool>(json['completed']),
+      isDeleted: serializer.fromJson<bool>(json['isDeleted']),
     );
   }
   @override
@@ -68,69 +82,83 @@ class Todo extends DataClass implements Insertable<Todo> {
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
       'completed': serializer.toJson<bool>(completed),
+      'isDeleted': serializer.toJson<bool>(isDeleted),
     };
   }
 
-  Todo copyWith({int id, String title, bool completed}) => Todo(
+  Todo copyWith({int id, String title, bool completed, bool isDeleted}) => Todo(
         id: id ?? this.id,
         title: title ?? this.title,
         completed: completed ?? this.completed,
+        isDeleted: isDeleted ?? this.isDeleted,
       );
   @override
   String toString() {
     return (StringBuffer('Todo(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('completed: $completed')
+          ..write('completed: $completed, ')
+          ..write('isDeleted: $isDeleted')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(id.hashCode, $mrjc(title.hashCode, completed.hashCode)));
+  int get hashCode => $mrjf($mrjc(id.hashCode,
+      $mrjc(title.hashCode, $mrjc(completed.hashCode, isDeleted.hashCode))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Todo &&
           other.id == this.id &&
           other.title == this.title &&
-          other.completed == this.completed);
+          other.completed == this.completed &&
+          other.isDeleted == this.isDeleted);
 }
 
 class TodosCompanion extends UpdateCompanion<Todo> {
   final Value<int> id;
   final Value<String> title;
   final Value<bool> completed;
+  final Value<bool> isDeleted;
   const TodosCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.completed = const Value.absent(),
+    this.isDeleted = const Value.absent(),
   });
   TodosCompanion.insert({
     this.id = const Value.absent(),
     @required String title,
     @required bool completed,
+    @required bool isDeleted,
   })  : title = Value(title),
-        completed = Value(completed);
+        completed = Value(completed),
+        isDeleted = Value(isDeleted);
   static Insertable<Todo> custom({
     Expression<int> id,
     Expression<String> title,
     Expression<bool> completed,
+    Expression<bool> isDeleted,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (completed != null) 'completed': completed,
+      if (isDeleted != null) 'is_deleted': isDeleted,
     });
   }
 
   TodosCompanion copyWith(
-      {Value<int> id, Value<String> title, Value<bool> completed}) {
+      {Value<int> id,
+      Value<String> title,
+      Value<bool> completed,
+      Value<bool> isDeleted}) {
     return TodosCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       completed: completed ?? this.completed,
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 
@@ -146,6 +174,9 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     if (completed.present) {
       map['completed'] = Variable<bool>(completed.value);
     }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
     return map;
   }
 
@@ -154,7 +185,8 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     return (StringBuffer('TodosCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('completed: $completed')
+          ..write('completed: $completed, ')
+          ..write('isDeleted: $isDeleted')
           ..write(')'))
         .toString();
   }
@@ -197,8 +229,20 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
     );
   }
 
+  final VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
+  GeneratedBoolColumn _isDeleted;
   @override
-  List<GeneratedColumn> get $columns => [id, title, completed];
+  GeneratedBoolColumn get isDeleted => _isDeleted ??= _constructIsDeleted();
+  GeneratedBoolColumn _constructIsDeleted() {
+    return GeneratedBoolColumn(
+      'is_deleted',
+      $tableName,
+      false,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [id, title, completed, isDeleted];
   @override
   $TodosTable get asDslTable => this;
   @override
@@ -224,6 +268,12 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
           completed.isAcceptableOrUnknown(data['completed'], _completedMeta));
     } else if (isInserting) {
       context.missing(_completedMeta);
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted'], _isDeletedMeta));
+    } else if (isInserting) {
+      context.missing(_isDeletedMeta);
     }
     return context;
   }

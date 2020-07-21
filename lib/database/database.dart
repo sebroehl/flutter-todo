@@ -11,6 +11,7 @@ class Todos extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text()();
   BoolColumn get completed => boolean()();
+  BoolColumn get isDeleted => boolean()();
 }
 
 LazyDatabase _openConnection() {

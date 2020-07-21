@@ -34,6 +34,7 @@ class _CreateTodoModalState extends State<CreateTodoModal> {
             Expanded(
               child: TextField(
                 onChanged: (text) => setState(() => title = text),
+                onSubmitted: (_) => createTodo(),
                 style: TextStyle(color: Colors.white),
                 autofocus: true,
                 cursorColor: Colors.grey,

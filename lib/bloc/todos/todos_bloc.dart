@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:moor/moor.dart';
 import 'package:todo/bloc/todos/todos_event.dart';
 import 'package:todo/bloc/todos/todos_state.dart';
 import 'package:todo/container.dart';
@@ -42,7 +43,7 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
 
   Stream<TodosState> _mapTodoAddedToState(TodoAdded event) async* {
     if (state is TodosLoaded) {
-      await db.addTodo(event.todo);
+      await db.addTodo(event.todo.copyWith(isDeleted: Value(false)));
       yield TodosLoaded();
     }
   }

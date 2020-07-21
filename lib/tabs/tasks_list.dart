@@ -4,8 +4,14 @@ import 'package:todo/bloc/todos/todos_bloc.dart';
 import 'package:todo/bloc/todos/todos_event.dart';
 import 'package:todo/bloc/todos/todos_state.dart';
 import 'package:todo/database/database.dart';
+import 'package:todo/widgets/delete_todo_snackbar.dart';
 
-class TasksTab extends StatelessWidget {
+class TasksList extends StatelessWidget {
+  final String title;
+  final Function(Todo) filterStatement;
+
+  TasksList({this.title, this.filterStatement});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TodosBloc, TodosState>(
@@ -13,12 +19,17 @@ class TasksTab extends StatelessWidget {
         if (state is TodosLoadInProgress || state is TodosLoadFailure) {
           return Center(child: CircularProgressIndicator());
         } else {
-          final todos = (state as TodosLoaded).todos;
+          var todos = <Todo>[];
+          if (this.filterStatement == null) {
+            todos = (state as TodosLoaded).todos;
+          } else {
+            todos = (state as TodosLoaded).todos.where(filterStatement).toList();
+          }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Tasks',
+                title,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -30,7 +41,33 @@ class TasksTab extends StatelessWidget {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    ...todos.map((t) => TodoWidget(todo: t)),
+                    ...todos.map(
+                      (t) => TodoWidget(
+                        key: UniqueKey(),
+                        todo: t,
+                        onComplete: () {
+                          BlocProvider.of<TodosBloc>(context).add(
+                            TodoUpdated(t.copyWith(completed: !t.completed)),
+                          );
+                        },
+                        onDelete: (_) {
+                          BlocProvider.of<TodosBloc>(context).add(
+                            TodoUpdated(t.copyWith(isDeleted: true)),
+                          );
+                          Scaffold.of(context).showSnackBar(
+                            DeleteTodoSnackbar(
+                              key: UniqueKey(),
+                              todo: t,
+                              onUndo: () {
+                                BlocProvider.of<TodosBloc>(context).add(
+                                  TodoUpdated(t.copyWith(isDeleted: false)),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -44,13 +81,22 @@ class TasksTab extends StatelessWidget {
 
 class TodoWidget extends StatelessWidget {
   final Todo todo;
+  final VoidCallback onComplete;
+  final Function(DismissDirection) onDelete;
 
-  const TodoWidget({this.todo, Key key}) : super(key: key);
+  const TodoWidget({
+    this.todo,
+    this.onComplete,
+    this.onDelete,
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
+    return Dismissible(
+      key: key,
+      direction: DismissDirection.startToEnd,
+      onDismissed: onDelete,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 0.0),
         child: Row(
@@ -62,11 +108,7 @@ class TodoWidget extends StatelessWidget {
                 color: Colors.grey.shade500,
                 size: 17.0,
               ),
-              onPressed: () {
-                BlocProvider.of<TodosBloc>(context).add(
-                  TodoUpdated(todo.copyWith(completed: !todo.completed)),
-                );
-              },
+              onPressed: onComplete,
             ),
             SizedBox(width: 5.0),
             Text(

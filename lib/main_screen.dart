@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/constants.dart';
 import 'package:todo/models/app_tab.dart';
-import 'package:todo/tabs/tasks_tab.dart';
+import 'package:todo/tabs/tasks_list.dart';
 import 'package:todo/widgets/custom_app_bar.dart';
 import 'package:todo/widgets/navigation_bar.dart';
 
@@ -15,11 +15,12 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   Map<AppTab, Widget> contentItems = {
-    AppTab.tasks: TasksTab(),
-    AppTab.today: Text('Today'),
-    AppTab.upcoming: Text('Upcoming'),
-    AppTab.activity: Text('Activity'),
-    AppTab.trash: Text('Trash'),
+    // AppTab.tasks: TasksList(filterStatement: (t) => t.completed),
+    AppTab.tasks: TasksList(title: 'Tasks', filterStatement: (t) => !t.isDeleted),
+    AppTab.today: TasksList(title: 'Today', filterStatement: (t) => t.id == 0),
+    AppTab.upcoming: TasksList(title: 'Upcoming', filterStatement: (t) => t.id == 0),
+    AppTab.activity: TasksList(title: 'Activity', filterStatement: (t) => t.id == 0),
+    AppTab.trash: TasksList(title: 'Trash', filterStatement: (t) => t.isDeleted),
   };
 
   @override
