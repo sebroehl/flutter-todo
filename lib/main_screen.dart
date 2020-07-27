@@ -15,7 +15,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   Map<AppTab, Widget> contentItems = {
-    // AppTab.tasks: TasksList(filterStatement: (t) => t.completed),
     AppTab.tasks: TasksList(title: 'Tasks', filterStatement: (t) => !t.isDeleted),
     AppTab.today: TasksList(title: 'Today', filterStatement: (t) => t.id == 0),
     AppTab.upcoming: TasksList(title: 'Upcoming', filterStatement: (t) => t.id == 0),
